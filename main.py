@@ -9,9 +9,10 @@ def main():
 class Intervals():
     def __init__(self, N):
         self.N = N
+        self.cycle = int(N * (N + 1) / 2)
         self.series = [x for x in range(1, N + 1)]
         self.series.extend(range(1, N))
-        self.counter = [0] * N
+        self.counter = [0] * self.cycle
 
     def countUp(self, i):
         self.counter[i - 1] += 1
@@ -33,8 +34,8 @@ class Intervals():
         if i < 1: raise IndexError
         return self.counter[i - 1]
 
-    def getLength(self):
-        return len(self.series)
+    def getCycle(self):
+        return self.cycle
 
 
 import unittest
@@ -49,6 +50,7 @@ class _TestCase(unittest.TestCase):
         self.assertIsInstance(self.intervals, Intervals)
         self.assertIsInstance(self.intervals.series, list)
         self.assertEqual(len(self.intervals.series), self.N * 2 - 1)
+        self.assertEqual(self.intervals.cycle * 2, self.intervals.N * (self.intervals.N + 1))
 
     def testSum(self):
         self.assertEqual(self.intervals.series, [1, 2, 3, 1, 2])
@@ -74,11 +76,17 @@ class _TestCase(unittest.TestCase):
         self.assertEqual(0, self.intervals.getCounter(self.intervals.N))
         self.assertRaises(IndexError, lambda: self.intervals.getCounter(self.intervals.N + 1))
 
-    def testCountUpForWidth(self):
+    def testCountUpForWidth1(self):
         self.assertEqual(self.intervals.series, [1, 2, 3, 1, 2])
         self.assertEqual(self.intervals.counter, [0, 0, 0])
         self.intervals.countUpForWidth(1)
-        self.assertEqual(self.intervals.counter, [1, 1, 1])
+        self.assertEqual(self.intervals.counter, [1, 1, 1, 0, 0])
+
+    def testCountUpForWidth2(self):
+        self.assertEqual(self.intervals.series, [1, 2, 3, 1, 2])
+        self.assertEqual(self.intervals.counter, [0, 0, 0, 0, 0])
+        self.intervals.countUpForWidth(2)
+        self.assertEqual(self.intervals.counter, [0, 0, 1, 1, 1])
 
 
 if __name__ == "__main__":
