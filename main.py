@@ -2,6 +2,7 @@ __author__ = 'sasaki'
 
 
 def main():
+    print("main")
     pass
 
 
@@ -24,7 +25,7 @@ class Intervals():
         return s
 
     def countUpForWidth(self, width):
-        for i in (range(1, len(self.series + 1))):
+        for i in (range(1, self.N + 1)):
             s = self.sum(i, width)
             self.countUp(s)
 
@@ -66,12 +67,20 @@ class _TestCase(unittest.TestCase):
         self.assertEqual(self.intervals.counter[0], 0)
         self.intervals.countUp(1)
         self.assertEqual(self.intervals.counter[0], 1)
-        self.assertEqual(1, self.intervals.getCounter(1))
+        self.intervals.countUp(1)
+        self.assertEqual(2, self.intervals.getCounter(1))
         self.assertRaises(IndexError, lambda: self.intervals.getCounter(0))
         self.assertEqual(self.N * 2 - 1, self.intervals.getLength())
         self.assertEqual(0, self.intervals.getCounter(self.intervals.N))
         self.assertRaises(IndexError, lambda: self.intervals.getCounter(self.intervals.N + 1))
 
+    def testCountUpForWidth(self):
+        self.assertEqual(self.intervals.series, [1, 2, 3, 1, 2])
+        self.assertEqual(self.intervals.counter, [0, 0, 0])
+        self.intervals.countUpForWidth(1)
+        self.assertEqual(self.intervals.counter, [1, 1, 1])
+
 
 if __name__ == "__main__":
     unittest.main()
+    main()
